@@ -122,7 +122,7 @@ class SpinningWheelAnimator: NSObject {
         transformAnim.values         = [0, rotation * rotationDirectionOffset * CGFloat.pi/180]
         transformAnim.keyTimes       = [0, 1]
         transformAnim.duration       = animationDuration
-        transformAnim.timingFunction = CAMediaTimingFunction(controlPoints: 0.0256, 0.874, 0.675, 1)
+        transformAnim.timingFunction = CAMediaTimingFunction.easeOutQuart
         transformAnim.fillMode = CAMediaTimingFillMode.forwards
         transformAnim.isRemovedOnCompletion = false
         transformAnim.delegate = self
