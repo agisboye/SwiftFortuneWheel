@@ -14,7 +14,7 @@ import AVFoundation
 public typealias SoundIdentifier = String
 
 /// Audio Player Manager, used to control the sound playing process
-class AudioPlayerManager {
+public class AudioPlayerManager {
     
     /// Defines the number of players which Starling instantiates
     /// during initialization. If more concurrent sounds than this
@@ -60,7 +60,7 @@ class AudioPlayerManager {
     
     /// Loads sound with Audio file
     /// - Parameter audioFile: Audio file
-    func load(audioFile: AudioFile) {
+    public func load(audioFile: AudioFile) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let blockSelf = self else { return }
             guard let url = audioFile.url, let identifier = audioFile.identifier else {
@@ -75,7 +75,7 @@ class AudioPlayerManager {
     /// - Parameters:
     ///   - url: File's URL
     ///   - identifier: Sound's identifier
-    func load(sound url: URL, for identifier: SoundIdentifier) {
+    public func load(sound url: URL, for identifier: SoundIdentifier) {
         if let file = try? AVAudioFile(forReading: url) {
             didFinishLoadingAudioFile(file, identifier: identifier)
         } else {
@@ -89,7 +89,7 @@ class AudioPlayerManager {
     /// - Parameters:
     ///   - sound: Sound's identifier
     ///   - allowOverlap: Allow overlap sound each other
-    func play(_ sound: SoundIdentifier, allowOverlap: Bool = true) {
+    public func play(_ sound: SoundIdentifier, allowOverlap: Bool = true) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.performSoundPlayback(sound, allowOverlap: allowOverlap)
         }

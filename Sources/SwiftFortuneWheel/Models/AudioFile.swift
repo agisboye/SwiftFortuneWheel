@@ -12,31 +12,32 @@ import Foundation
 public struct AudioFile {
     
     /// Filename
-    var filename: String?
+    public var filename: String?
     
     /// Extension name
-    var extensionName: String?
+    public var extensionName: String?
     
     /// File's bundle
-    var bundle: Bundle?
+    public var bundle: Bundle?
     
     /// File's URL
-    var url: URL?
+    public var url: URL?
     
     /// File's identifier
-    var identifier: String?
+    public var identifier: String?
     
     /// Initializes audio file
     /// - Parameters:
     ///   - filename: Filename
     ///   - extensionName: Extension name
     ///   - bundle: Bundle, optional
-    public init(filename: String, extensionName: String, bundle: Bundle? = nil) {
+    public init(filename: String, extensionName: String, bundle: Bundle? = nil, identifier: String? = nil) {
         self.filename = filename
         self.extensionName = extensionName
         let bundle = bundle ?? Bundle.main
         self.bundle = bundle
         self.url = bundle.url(forResource: filename, withExtension: extensionName)
+        self.identifier = identifier
     }
     
     /// Initializes audio file

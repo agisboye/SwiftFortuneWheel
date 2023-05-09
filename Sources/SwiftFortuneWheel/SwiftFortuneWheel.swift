@@ -123,7 +123,7 @@ public class SwiftFortuneWheel: SFWControl {
     private var wheelViewTapGesture: UITapGestureRecognizer?
     
     /// Audio player manager, used for collision effects sound
-    private(set) lazy var audioPlayerManager = AudioPlayerManager()
+    private(set) public lazy var audioPlayerManager = AudioPlayerManager()
     
 #if os(iOS)
    private(set) var storedImpactFeedbackGenerator: Any?
