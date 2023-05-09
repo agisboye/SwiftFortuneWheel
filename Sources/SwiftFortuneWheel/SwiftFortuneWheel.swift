@@ -484,14 +484,17 @@ public extension SwiftFortuneWheel {
     ///   - continuousRotationTime: Full rotation time in seconds before stops
     ///   - continuousRotationSpeed: Rotation speed
     ///   - completion: Completion handler
-    func startRotationAnimation(finishIndex: Int, continuousRotationTime: Int, continuousRotationSpeed: CGFloat = 4, _ completion: ((Bool) -> Void)?) {
+    func startRotationAnimation(finishIndex: Int, continuousRotationTime: Int, continuousRotationSpeed: CGFloat = 4, fullRotationsCount: Int = 13, animationDuration: CFTimeInterval = 5.000, _ completion: ((Bool) -> Void)?) {
         let _index = finishIndex < self.slices.count ? finishIndex : self.slices.count - 1
         self.startContinuousRotationAnimation(with: continuousRotationSpeed)
         let deadline = DispatchTime.now() + DispatchTimeInterval.seconds(continuousRotationTime)
         DispatchQueue.main.asyncAfter(deadline: deadline) {
-            self.startRotationAnimation(finishIndex: _index) { (finished) in
-                completion?(finished)
-            }
+            self.startRotationAnimation(
+                finishIndex: _index,
+                fullRotationsCount: fullRotationsCount,
+                animationDuration: animationDuration,
+                completion
+            )
         }
     }
     
