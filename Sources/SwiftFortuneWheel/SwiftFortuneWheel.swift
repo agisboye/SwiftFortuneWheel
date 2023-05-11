@@ -548,6 +548,40 @@ public extension SwiftFortuneWheel {
                                     animationDuration: animationDuration,
                                     completion)
     }
+    
+    
+    /// Starts animation that runs at continuous speed for an amount of time before decelerating and stopping at the specified index.
+    /// - Parameters:
+    ///   - finishIndex: finish at index
+    ///   - continuousTime: amount of time to run continuously for
+    ///   - speed: the speed at which the wheel spins continuously (revolutions per second)
+    ///   - decelerationTime: amount of time to decelerate for
+    ///   - revolutions: number of revolutions the wheel makes while decelerating
+    ///   - completion: completion
+    func startRotation(finishIndex: Int, continuousTime: CFTimeInterval, speed: CGFloat, decelerationTime: CFTimeInterval, revolutions: Int, completion: ((Bool) -> Void)?) {
+        let _index = finishIndex < self.slices.count ? finishIndex : self.slices.count - 1
+        let rotation = 360.0 - computeRadian(from: _index)
+        
+        stopRotation()
+        
+        animator.addRotationAnimation(
+            continuousTime: continuousTime,
+            speed: speed,
+            decelerationTime: decelerationTime,
+            revolutions: revolutions,
+            rotationOffset: rotation,
+            completionBlock: completion,
+            onEdgeCollision: { [weak self] progress in
+                self?.impactIfNeeded(for: .edge)
+                self?.onEdgeCollision?(progress)
+            },
+            onCenterCollision: { [weak self] (progress) in
+                self?.impactIfNeeded(for: .center)
+                self?.onCenterCollision?(progress)
+            }
+        )
+    }
+    
 }
 
 // MARK: - Public API (IBInspectable)

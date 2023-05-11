@@ -84,7 +84,9 @@ class SpinningWheelAnimator: NSObject {
         transformAnim.values   = [0, fullRotationDegree * speed * speedAcceleration * CGFloat.pi/180 * rotationDirectionOffset]
         transformAnim.keyTimes = [0, 1]
         transformAnim.duration = 1
-        
+        if #available(iOSApplicationExtension 15.0, *) {
+            transformAnim.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
+        }
         let rotationAnim : CAAnimationGroup = CAAnimationGroup(animations: [transformAnim], fillMode:fillMode)
         rotationAnim.repeatCount = Float.infinity
         rotationAnim.delegate = self
@@ -130,8 +132,79 @@ class SpinningWheelAnimator: NSObject {
             transformAnim.setValue("rotation", forKey:"animId")
             self.completionBlock = completionBlock
         }
-        
+
+        if #available(iOSApplicationExtension 15.0, *) {
+            transformAnim.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
+        }
         animationObject?.layerToAnimate?.add(transformAnim, forKey:"starRotationAnim")
+        
+        // to fix the problem of the layer's presentation becoming nil in detectors
+        edgeCollisionDetector.animationObjectLayer = animationObject?.layerToAnimate
+        centerCollisionDetector.animationObjectLayer = animationObject?.layerToAnimate
+        
+        startedAnimationCount += 1
+        startCollisionDetectorsIfNeeded()
+    }
+    
+    func addRotationAnimation(continuousTime: CFTimeInterval,
+                              speed: CGFloat,
+                              decelerationTime: CFTimeInterval,
+                              revolutions: Int,
+                              rotationOffset: CGFloat = 0.0,
+                              completionBlock: ((_ finished: Bool) -> Void)? = nil,
+                              onEdgeCollision: ((_ progress: Double?) -> Void)? = nil,
+                              onCenterCollision: ((_ progress: Double?) -> Void)? = nil) {
+        
+        let continuousRotation: CGFloat = 360 * speed * continuousTime
+        let decelRotation: CGFloat = CGFloat(revolutions) * 360 + rotationOffset + continuousRotation
+        let totalRotation = continuousRotation + decelRotation
+        let totalDuration = continuousTime + decelerationTime
+
+        // Continuous rotation
+        let continuousRotationTo = continuousRotation * rotationDirectionOffset * .pi / 180
+        
+        let continuousAnimation = CAKeyframeAnimation(keyPath:"transform.rotation.z")
+        continuousAnimation.values = [0, continuousRotationTo]
+        continuousAnimation.keyTimes = [0, 1]
+        continuousAnimation.duration = continuousTime
+        
+        // Decelerating rotation
+        let decelRotationTo = decelRotation * rotationDirectionOffset * .pi / 180
+        
+        let decelerationAnimation = CAKeyframeAnimation(keyPath:"transform.rotation.z")
+        decelerationAnimation.values = [continuousRotationTo, decelRotationTo]
+        decelerationAnimation.keyTimes = [0, 1]
+        decelerationAnimation.duration = decelerationTime
+        decelerationAnimation.timingFunction = .easeOutQuart
+        decelerationAnimation.beginTime = continuousTime
+        
+        // Group
+        let group = CAAnimationGroup()
+        group.animations = [continuousAnimation, decelerationAnimation]
+        group.delegate = self
+        group.isRemovedOnCompletion = false
+        group.fillMode = .forwards
+        group.duration = totalDuration
+        
+        if completionBlock != nil {
+            group.setValue("rotation", forKey:"animId")
+            self.completionBlock = completionBlock
+        }
+
+        if #available(iOSApplicationExtension 15.0, *) {
+            group.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
+        }
+        
+        // TODO: I would expect that we need to pass totalRotation, but for some reason it has to be only the amount of rotation in the second animation (decelRotation)
+        prepareAllCollisionDetectorsIfNeeded(with: decelRotation,
+                                             animationDuration: totalDuration,
+                                             onEdgeCollision: onEdgeCollision,
+                                             onCenterCollision: onCenterCollision)
+        
+        self.currentRotationPosition = totalRotation
+        
+        // Start animation
+        animationObject?.layerToAnimate?.add(group, forKey: "starRotationAnim")
         
         // to fix the problem of the layer's presentation becoming nil in detectors
         edgeCollisionDetector.animationObjectLayer = animationObject?.layerToAnimate
