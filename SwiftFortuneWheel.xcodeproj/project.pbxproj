@@ -67,6 +67,7 @@
 		27F7D5BF24A5F6B0004BEE19 /* String+Dots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7D5BE24A5F6B0004BEE19 /* String+Dots.swift */; };
 		52D6D9871BEFF229002C0205 /* SwiftFortuneWheel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* SwiftFortuneWheel.framework */; };
 		8933C7901EB5B82D000D00A4 /* SwiftFortuneWheelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8933C7891EB5B82A000D00A4 /* SwiftFortuneWheelTests.swift */; };
+		A51328372A0A8AF300F20E06 /* CAMediaTimingFunction+Curves.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51328362A0A8AF300F20E06 /* CAMediaTimingFunction+Curves.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,6 +144,7 @@
 		52D6D97C1BEFF229002C0205 /* SwiftFortuneWheel.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftFortuneWheel.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6D9861BEFF229002C0205 /* SwiftFortuneWheelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftFortuneWheelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8933C7891EB5B82A000D00A4 /* SwiftFortuneWheelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftFortuneWheelTests.swift; sourceTree = "<group>"; };
+		A51328362A0A8AF300F20E06 /* CAMediaTimingFunction+Curves.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAMediaTimingFunction+Curves.swift"; sourceTree = "<group>"; };
 		AD2FAA261CD0B6D800659CF4 /* SwiftFortuneWheel.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SwiftFortuneWheel.plist; sourceTree = "<group>"; };
 		AD2FAA281CD0B6E100659CF4 /* SwiftFortuneWheelTests.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SwiftFortuneWheelTests.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -338,6 +340,7 @@
 				277FCC6F251DC3F600CC6590 /* CAAnimationGroup+Builder.swift */,
 				277FCC76251DC69900CC6590 /* CAAnimation+Duration.swift */,
 				277FCC7A251DC89700CC6590 /* CALayer+UpdateValues.swift */,
+				A51328362A0A8AF300F20E06 /* CAMediaTimingFunction+Curves.swift */,
 			);
 			path = CoreAnimation;
 			sourceTree = "<group>";
@@ -566,6 +569,7 @@
 				27E291C42550309200486B6D /* ImpactFeedbackable.swift in Sources */,
 				2710567F248D4C93006C0181 /* CGRest+AspectFit.swift in Sources */,
 				27105683248D4C93006C0181 /* SpinButton.swift in Sources */,
+				A51328372A0A8AF300F20E06 /* CAMediaTimingFunction+Curves.swift in Sources */,
 				2710567A248D4C93006C0181 /* Slice.swift in Sources */,
 				2710F813254A9A6C00033887 /* CollisionCalculator.swift in Sources */,
 				275855A825628E8B009B69D0 /* CollisionEffect.swift in Sources */,
