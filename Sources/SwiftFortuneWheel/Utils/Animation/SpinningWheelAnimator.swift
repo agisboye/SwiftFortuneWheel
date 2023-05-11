@@ -84,11 +84,11 @@ class SpinningWheelAnimator: NSObject {
         transformAnim.values   = [0, fullRotationDegree * speed * speedAcceleration * CGFloat.pi/180 * rotationDirectionOffset]
         transformAnim.keyTimes = [0, 1]
         transformAnim.duration = 1
-        if #available(iOSApplicationExtension 15.0, *) {
+        if #available(iOS 15.0, iOSApplicationExtension 15.0, *) {
             transformAnim.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
         }
         let rotationAnim : CAAnimationGroup = CAAnimationGroup(animations: [transformAnim], fillMode:fillMode)
-        rotationAnim.repeatCount = Float.infinity
+        rotationAnim.repeatCount = .infinity
         rotationAnim.delegate = self
         animationObject?.layerToAnimate?.add(rotationAnim, forKey:"starRotationIndefiniteAnim")
         
@@ -133,7 +133,7 @@ class SpinningWheelAnimator: NSObject {
             self.completionBlock = completionBlock
         }
 
-        if #available(iOSApplicationExtension 15.0, *) {
+        if #available(iOS 15.0, iOSApplicationExtension 15.0, *) {
             transformAnim.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
         }
         animationObject?.layerToAnimate?.add(transformAnim, forKey:"starRotationAnim")
@@ -191,7 +191,7 @@ class SpinningWheelAnimator: NSObject {
             self.completionBlock = completionBlock
         }
 
-        if #available(iOSApplicationExtension 15.0, *) {
+        if #available(iOS 15.0, *) {
             group.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
         }
         
