@@ -90,9 +90,7 @@ public class AudioPlayerManager {
     ///   - sound: Sound's identifier
     ///   - allowOverlap: Allow overlap sound each other
     public func play(_ sound: SoundIdentifier, allowOverlap: Bool = true) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.performSoundPlayback(sound, allowOverlap: allowOverlap)
-        }
+        performSoundPlayback(sound, allowOverlap: allowOverlap)
     }
     
     // MARK: - Internal Functions
