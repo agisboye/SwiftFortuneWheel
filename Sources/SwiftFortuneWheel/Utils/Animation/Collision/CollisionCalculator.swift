@@ -57,7 +57,6 @@ class CollisionCalculator {
         }
     }
     
-    
     /// Calculates collisions if needed
     /// - Parameters:
     ///   - layerRotationZ: Animation layer rotation Z position
@@ -79,43 +78,31 @@ class CollisionCalculator {
         // Total rotation degree of the layer
         totalRotationDegree = Double(rotationCount * 360) + currentRotationDegree
         
-        // Current collision degree that should be used to collide
-        let currentCollisionDegree = collisionDegrees[currentCollisionIndex]
+        var latestProgress: Double?
         
-        // If the layer rotation position is more then current collision degree
-        if currentCollisionDegree < totalRotationDegree {
-            // Next collision index
-            var nextCollisionIndex = currentCollisionIndex + 1
-            // If not finished
-            guard currentCollisionIndex < collisionDegrees.count else {
-                // Updates current collision index
-                currentCollisionIndex = nextCollisionIndex
+        // Determine which of the collision degrees have been passed since the last updated.
+        // Progress is reported for the last collision that occurred
+        for collisionDegree in collisionDegrees[currentCollisionIndex..<collisionDegrees.count] {
+            if collisionDegree < totalRotationDegree {
                 // Update current collision progress
-                let progress: Double = Double(currentCollisionIndex / collisionDegrees.count)
-                // Callback collision if needed with progress
-                onCollision?(progress)
-                return
+                latestProgress = Double(currentCollisionIndex) / Double(collisionDegrees.count)
+                
+                // Advance current index
+                currentCollisionIndex += 1
+            } else {
+                break
             }
-            // Creates a new collision degrees array from the next collision index
-            let nextCollisionDegrees = collisionDegrees[currentCollisionIndex+1..<collisionDegrees.count]
-            
-            // Moves collision index forward if total rotated degree is passed
-            // Made to bypass sound delay if layers are rotating very fast and collisions count are too many
-            for nextCollisionDegree in nextCollisionDegrees {
-                if nextCollisionDegree < totalRotationDegree {
-                    nextCollisionIndex += 1
-                } else {
-                    break
-                }
-            }
-            // Updates current collision index
-            currentCollisionIndex = nextCollisionIndex
-            // Update current collision progress
-            let progress: Double = Double(currentCollisionIndex) / Double(collisionDegrees.count)
-            // Callback collision if needed with progress
-            onCollision?(progress)
         }
-
+        
+        if currentCollisionIndex >= collisionDegrees.count {
+            latestProgress = 1
+        }
+        
+        if let latestProgress {
+            // Callback collision if needed with progress
+            onCollision?(latestProgress)
+        }
+        
         // If the previous rotation degree is more than current, then the layer is rotated more than 360 degree
         if lastRotationDegree ?? 0 > currentRotationDegree {
             rotationCount += 1

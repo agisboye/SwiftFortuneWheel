@@ -355,14 +355,10 @@ extension SwiftFortuneWheel: ImpactFeedbackable {
     /// - Parameter type: Collision type
     fileprivate func impactFeedbackIfNeeded(for type: CollisionType) {
         switch type {
-        case .edge:
-            if edgeCollisionDetectionOn {
-                impactFeedback()
-            }
-        case .center:
-            if centerCollisionDetectionOn {
-                impactFeedback()
-            }
+        case .edge where edgeCollisionDetectionOn, .center where centerCollisionDetectionOn:
+            impactFeedback()
+        default:
+            break
         }
     }
 }
