@@ -14,6 +14,8 @@ import AppKit
 import UIKit
 #endif
 
+typealias CollisionCallback = ((_ progress: Double?, _ rotation: CGFloat) -> Void)
+
 /// Collision Protocol
 protocol CollisionProtocol {
     /// Slice Degree
@@ -45,6 +47,7 @@ protocol CollisionDetectable: NSObject {
     var centerCollisionDetector: CollisionDetector { get set }
 }
 
+
 extension CollisionDetectable {
     
     /// Starts all collision detectors if needed
@@ -67,8 +70,8 @@ extension CollisionDetectable {
     ///   - onCenterCollision: On center collision callback
     func prepareAllCollisionDetectorsIfNeeded(with rotationDegree: CGFloat,
                                               animationDuration: CFTimeInterval,
-                                              onEdgeCollision: ((_ progress: Double?) -> Void)? = nil,
-                                              onCenterCollision: ((_ progress: Double?) -> Void)? = nil) {
+                                              onEdgeCollision: CollisionCallback? = nil,
+                                              onCenterCollision: CollisionCallback? = nil) {
         prepareCollisionDetectorIfNeeded(for: .edge,
                                          with: rotationDegree,
                                          animationDuration: animationDuration,
@@ -88,7 +91,7 @@ extension CollisionDetectable {
     func prepareCollisionDetectorIfNeeded(for type: CollisionType,
                                           with rotationDegree: CGFloat,
                                           animationDuration: CFTimeInterval,
-                                          onCollision: ((_ progress: Double?) -> Void)? = nil) {
+                                          onCollision: CollisionCallback? = nil) {
         
         guard isCollisionDetectorOn(for: type) else { return }
         guard let sliceDegree = self.animationObject?.sliceDegree else { return }
@@ -114,8 +117,8 @@ extension CollisionDetectable {
     func prepareAllCollisionDetectorsIfNeeded(with rotationDegree: CGFloat,
                                               speed: CGFloat,
                                               speedAcceleration: CGFloat,
-                                              onEdgeCollision: ((_ progress: Double?) -> Void)? = nil,
-                                              onCenterCollision: ((_ progress: Double?) -> Void)? = nil) {
+                                              onEdgeCollision: CollisionCallback? = nil,
+                                              onCenterCollision: CollisionCallback? = nil) {
         prepareCollisionDetectorIfNeeded(for: .edge,
                                          with: rotationDegree,
                                          speed: speed,
@@ -139,7 +142,7 @@ extension CollisionDetectable {
                                           with rotationDegree: CGFloat,
                                           speed: CGFloat,
                                           speedAcceleration: CGFloat,
-                                          onCollision: ((_ progress: Double?) -> Void)? = nil) {
+                                          onCollision: CollisionCallback? = nil) {
         
         guard isCollisionDetectorOn(for: type) else { return }
         guard let sliceDegree = self.animationObject?.sliceDegree else { return }

@@ -22,7 +22,7 @@ class SoundExampleViewController: UIViewController {
             
             fortuneWheel.impactFeedbackOn = true
             
-            fortuneWheel.onEdgeCollision = { progress in
+            fortuneWheel.onEdgeCollision = { progress, _ in
                 print("edge collision progress: \(String(describing: progress))")
             }
             

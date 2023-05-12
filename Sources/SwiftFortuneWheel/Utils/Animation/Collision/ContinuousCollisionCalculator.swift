@@ -21,7 +21,7 @@ class ContinuousCollisionCalculator {
     var lastCollisionTime: CFTimeInterval = 0
     
     /// Interval between collisions
-    private var CollisionInterval: CFTimeInterval?
+    private var collisionInterval: CFTimeInterval?
     
     /// Current collision index
     private var currentCollisionIndex: Int = 0
@@ -38,28 +38,28 @@ class ContinuousCollisionCalculator {
     ///   - speedAcceleration: Animation speed acceleration
     func calculateCollisionInterval(sliceDegree: CGFloat, rotationDegreeOffset: CGFloat, fullRotationDegree: CGFloat, speed: CGFloat, speedAcceleration: CGFloat) {
         self.rotationDegreeOffset = rotationDegreeOffset
-        CollisionInterval = CFTimeInterval(sliceDegree / (fullRotationDegree * speed * speedAcceleration))
+        collisionInterval = CFTimeInterval(sliceDegree / (fullRotationDegree * speed * speedAcceleration))
     }
     
     /// Calculates collisions
     /// - Parameters:
     ///   - timestamp: Time from the animation begun
     ///   - onCollision: On collision callback
-    func calculateCollisionsIfNeeded(timestamp: CFTimeInterval, onCollision: ((_ progress: Double?) -> Void)? = nil) {
-        guard let collisionInterval = self.CollisionInterval else { return }
+    func calculateCollisionsIfNeeded(timestamp: CFTimeInterval, onCollision: CollisionCallback) {
+        guard let collisionInterval = self.collisionInterval else { return }
         
         let interval = currentCollisionIndex == 0 ? collisionInterval - Double(rotationDegreeOffset) : collisionInterval
         
         if lastCollisionTime + interval < timestamp {
             lastCollisionTime = timestamp
             currentCollisionIndex += 1
-            onCollision?(nil)
+            onCollision(nil, 0) // FIXME: Rotation angle should be reported
         }
     }
     
     /// Resets parameters
     func reset() {
-        CollisionInterval = nil
+        collisionInterval = nil
         currentCollisionIndex = 0
     }
 }

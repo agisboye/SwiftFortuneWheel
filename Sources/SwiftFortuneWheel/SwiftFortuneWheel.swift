@@ -19,7 +19,7 @@ public class SwiftFortuneWheel: SFWControl {
     public var onSpinButtonTap: (() -> Void)?
     
     /// Callback for edge collision
-    public var onEdgeCollision: ((_ progress: Double?) -> Void)?
+    public var onEdgeCollision: ((_ progress: Double?, _ index: Int) -> Void)?
     
     /// Callback for center collision
     public var onCenterCollision: ((_ progress: Double?) -> Void)?
@@ -448,13 +448,20 @@ public extension SwiftFortuneWheel {
         
         DispatchQueue.main.async {
             self.stopRotation()
-            self.animator.addRotationAnimation(fullRotationsCount: fullRotationsCount, animationDuration: animationDuration, rotationOffset: rotationOffset, completionBlock: completion, onEdgeCollision: { [weak self] progress in                        self?.impactIfNeeded(for: .edge)
-                self?.onEdgeCollision?(progress)
-            })
-            { [weak self] (progress) in
-                self?.impactIfNeeded(for: .center)
-                self?.onCenterCollision?(progress)
-            }
+            self.animator.addRotationAnimation(
+                fullRotationsCount: fullRotationsCount,
+                animationDuration: animationDuration,
+                rotationOffset: rotationOffset,
+                completionBlock: completion,
+                onEdgeCollision: { [weak self] progress, rotation in                      guard let self else { return }
+                    self.impactIfNeeded(for: .edge)
+                    self.onEdgeCollision?(progress, self.itemIndex(from: rotation))
+                },
+                onCenterCollision: { [weak self] progress, rotation in
+                    self?.impactIfNeeded(for: .center)
+                    self?.onCenterCollision?(progress)
+                }
+            )
         }
     }
     
@@ -518,11 +525,12 @@ public extension SwiftFortuneWheel {
     /// - Parameter speed: Rotation speed
     func startContinuousRotationAnimation(with speed: CGFloat = 4) {
         self.stopRotation()
-        self.animator.addIndefiniteRotationAnimation(speed: speed, onEdgeCollision: { [weak self] progress in
-            self?.impactIfNeeded(for: .edge)
-            self?.onEdgeCollision?(progress)
+        self.animator.addIndefiniteRotationAnimation(speed: speed, onEdgeCollision: { [weak self] progress, rotation in
+            guard let self else { return }
+            self.impactIfNeeded(for: .edge)
+            self.onEdgeCollision?(progress, self.itemIndex(from: rotation))
         })
-        { [weak self] (progress) in
+        { [weak self] progress, rotation in
             self?.impactIfNeeded(for: .center)
             self?.onCenterCollision?(progress)
         }
@@ -571,11 +579,12 @@ public extension SwiftFortuneWheel {
             revolutions: revolutions,
             rotationOffset: rotation,
             completionBlock: completion,
-            onEdgeCollision: { [weak self] progress in
-                self?.impactIfNeeded(for: .edge)
-                self?.onEdgeCollision?(progress)
+            onEdgeCollision: { [weak self] progress, rotation in
+                guard let self else { return }
+                self.impactIfNeeded(for: .edge)
+                self.onEdgeCollision?(progress, self.itemIndex(from: rotation))
             },
-            onCenterCollision: { [weak self] (progress) in
+            onCenterCollision: { [weak self] progress, rotation in
                 self?.impactIfNeeded(for: .center)
                 self?.onCenterCollision?(progress)
             }

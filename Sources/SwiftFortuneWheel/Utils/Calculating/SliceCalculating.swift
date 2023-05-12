@@ -61,4 +61,15 @@ extension SliceCalculating {
     func segmentHeight(radius: CGFloat) -> CGFloat {
         return radius * (1 - cos(sliceDegree / 2 * CGFloat.pi / 180))
     }
+    
+    /// Computes the index (into the `slices` array) of the currently selected slice
+    /// based on the position of the wheel.
+    func itemIndex(from rotation: CGFloat) -> Int {
+        guard sliceDegree > 0 else { return 0 }
+        
+        let sliceIndex = (Int(rotation - sliceDegree / 2) % 360) / Int(sliceDegree)
+        let itemIndex = slices.count - 1 - sliceIndex
+        
+        return itemIndex
+    }
 }

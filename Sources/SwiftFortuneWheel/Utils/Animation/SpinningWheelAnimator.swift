@@ -67,8 +67,8 @@ class SpinningWheelAnimator: NSObject {
     /// Start indefinite rotation animation
     /// - Parameter speed: Rotation speed, speed is equal to full rotation quantity in one second
     func addIndefiniteRotationAnimation(speed: CGFloat = 1,
-                                        onEdgeCollision: ((_ progress: Double?) -> Void)? = nil,
-                                        onCenterCollision: ((_ progress: Double?) -> Void)? = nil) {
+                                        onEdgeCollision: CollisionCallback? = nil,
+                                        onCenterCollision: CollisionCallback? = nil) {
         
         let fullRotationDegree: CGFloat = 360
         let speedAcceleration: CGFloat = 1
@@ -107,8 +107,8 @@ class SpinningWheelAnimator: NSObject {
                               animationDuration: CFTimeInterval,
                               rotationOffset: CGFloat = 0.0,
                               completionBlock: ((_ finished: Bool) -> Void)? = nil,
-                              onEdgeCollision: ((_ progress: Double?) -> Void)? = nil,
-                              onCenterCollision: ((_ progress: Double?) -> Void)? = nil) {
+                              onEdgeCollision: CollisionCallback? = nil,
+                              onCenterCollision: CollisionCallback? = nil) {
         
         self.currentRotationPosition = rotationOffset
         
@@ -152,8 +152,8 @@ class SpinningWheelAnimator: NSObject {
                               revolutions: Int,
                               rotationOffset: CGFloat = 0.0,
                               completionBlock: ((_ finished: Bool) -> Void)? = nil,
-                              onEdgeCollision: ((_ progress: Double?) -> Void)? = nil,
-                              onCenterCollision: ((_ progress: Double?) -> Void)? = nil) {
+                              onEdgeCollision: CollisionCallback? = nil,
+                              onCenterCollision: CollisionCallback? = nil) {
         
         let continuousRotation: CGFloat = 360 * speed * continuousTime
         let decelRotation: CGFloat = CGFloat(revolutions) * 360 + rotationOffset + continuousRotation
@@ -194,8 +194,7 @@ class SpinningWheelAnimator: NSObject {
         if #available(iOS 15.0, *) {
             group.preferredFrameRateRange = .init(minimum: 80, maximum: 120, preferred: 120)
         }
-        
-        // TODO: I would expect that we need to pass totalRotation, but for some reason it has to be only the amount of rotation in the second animation (decelRotation)
+
         prepareAllCollisionDetectorsIfNeeded(with: decelRotation,
                                              animationDuration: totalDuration,
                                              onEdgeCollision: onEdgeCollision,

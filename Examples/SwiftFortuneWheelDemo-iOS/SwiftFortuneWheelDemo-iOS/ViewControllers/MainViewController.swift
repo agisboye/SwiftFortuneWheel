@@ -18,6 +18,17 @@ class MainViewController: UITableViewController {
         self.title = "SwiftFortuneWheel"
     }
     
+    var first = true
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        guard first else { return }
+        let storyboard = UIStoryboard.init(name: "Various", bundle: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "\(VariousWheelSimpleViewController.self)") as? VariousWheelSimpleViewController
+        guard let _viewController = viewController else { return }
+        self.navigationController?.pushViewController(_viewController, animated: true)
+        first = false
+    }
 
     /*
     // MARK: - Navigation

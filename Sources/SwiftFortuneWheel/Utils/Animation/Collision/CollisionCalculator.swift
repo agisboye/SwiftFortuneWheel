@@ -41,6 +41,12 @@ class CollisionCalculator {
         #endif
     }
     
+    /// Size of each slice (in degrees)
+    private var sliceDegree: CGFloat = 0
+    
+    /// Rotation degree offset
+    private var rotationDegreeOffset: CGFloat = 0
+    
     /// Calculates collisions start positions
     /// - Parameters:
     ///   - sliceDegree: Slice degree
@@ -55,13 +61,16 @@ class CollisionCalculator {
             let degree = (rotationDegreeOffset + (CGFloat(index) * sliceDegree))
             collisionDegrees.append(Double(degree))
         }
+        
+        self.sliceDegree = sliceDegree
+        self.rotationDegreeOffset = rotationDegreeOffset
     }
     
     /// Calculates collisions if needed
     /// - Parameters:
     ///   - layerRotationZ: Animation layer rotation Z position
     ///   - onCollision: On collision callback
-    func calculateCollisionsIfNeeded(layerRotationZ: Double?, onCollision: ((_ progress: Double?) -> Void)? = nil) {
+    func calculateCollisionsIfNeeded(layerRotationZ: Double?, onCollision: CollisionCallback) {
         // Return if collisionDegrees is empty
         guard collisionDegrees.count > 0 else { return }
         // Return if layerRotationZ is nil
@@ -100,7 +109,7 @@ class CollisionCalculator {
         
         if let latestProgress {
             // Callback collision if needed with progress
-            onCollision?(latestProgress)
+            onCollision(latestProgress, currentRotationDegree)
         }
         
         // If the previous rotation degree is more than current, then the layer is rotated more than 360 degree
@@ -119,5 +128,7 @@ class CollisionCalculator {
         rotationCount = 0
         totalRotationDegree = 0
         lastRotationDegree = nil
+        sliceDegree = 0
+        rotationDegreeOffset = 0
     }
 }

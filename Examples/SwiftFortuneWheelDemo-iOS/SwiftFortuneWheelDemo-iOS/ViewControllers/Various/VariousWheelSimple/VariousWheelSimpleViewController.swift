@@ -28,6 +28,15 @@ class VariousWheelSimpleViewController: UIViewController {
             wheelControl.pinImageViewCollisionEffect = CollisionEffect(force: 8, angle: 20)
             
             wheelControl.edgeCollisionDetectionOn = true
+            wheelControl.onEdgeCollision = { progress, index in
+//                print("Angle: ", progress, " index: ", index)
+//                print("edge collision progress: \(String(describing: progress))")
+//                var prizes = ["$30", "$10", "$250", "$20", "LOSE", "$5", "$500", "$80", "LOSE", "$200"]
+//                print("Current value: \(prizes[prizes.count - 1 - currentSliceIndex])")
+                print("Current prize: \(self.prizes[index])")
+            }
+            
+            wheelControl.edgeCollisionSound = AudioFile(filename: "Click", extensionName: "mp3")
         }
     }
     
@@ -52,9 +61,34 @@ class VariousWheelSimpleViewController: UIViewController {
     }
     
     @IBAction func rotateTap(_ sender: Any) {
-        wheelControl.startRotationAnimation(finishIndex: finishIndex, continuousRotationTime: 1) { (finished) in
+//        wheelControl.startRotationAnimation(finishIndex: finishIndex, continuousRotationTime: 1) { (finished) in
+//            print(finished)
+//        }
+        
+        let idx = finishIndex
+        print("Winner: \(prizes[idx])")
+        
+//        self.wheelControl.startRotationAnimation(
+//            finishIndex: idx,
+//            continuousRotationTime: 5,
+//            fullRotationsCount: 20,
+//            animationDuration: 15
+//        ) { (finished) in
+//
+////            self.state = .done
+//        }
+        
+        wheelControl.startRotation(finishIndex: idx, continuousTime: 5, speed: 5, decelerationTime: 15, revolutions: 12) { finished in
+//            print(finished)
+//        }
+
+//        wheelControl.startRotation(finishIndex: idx, continuousTime: 1, speed: 5, decelerationTime: 5, revolutions: 5) { finished in
             print(finished)
         }
+
+//        wheelControl.startRotationAnimation(finishIndex: idx, fullRotationsCount: 13, animationDuration: 15.0) { (finished) in
+//            print(finished)
+//        }
     }
 
 }

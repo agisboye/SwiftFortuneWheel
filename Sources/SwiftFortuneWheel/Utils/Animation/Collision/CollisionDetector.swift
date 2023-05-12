@@ -21,7 +21,7 @@ class CollisionDetector {
     weak var animationObjectLayer: CALayer?
     
     /// On collision callback
-    var onCollision: ((_ progress: Double?) -> Void)?
+    var onCollision: CollisionCallback?
     
     
     #if os(macOS)
@@ -41,7 +41,7 @@ class CollisionDetector {
     /// - Parameters:
     ///   - animationObjectLayer: Layer that animates
     ///   - onCollision: On collision callback
-    init(animationObjectLayer: CALayer?, onCollision: ((_ progress: Double?) -> Void)? = nil) {
+    init(animationObjectLayer: CALayer?, onCollision: CollisionCallback? = nil) {
         self.animationObjectLayer = animationObjectLayer
         self.onCollision = onCollision
         #if !os(macOS)
@@ -122,14 +122,14 @@ class CollisionDetector {
     /// - Parameter displaylink: A timer object that allows your application to synchronize its drawing to the refresh rate of the display.
     @objc
     private func screenRefresh(displaylink: CADisplayLink) {
-        continuousCollisionCalculator.calculateCollisionsIfNeeded(timestamp: displaylink.timestamp, onCollision: { [weak self] progress in
-            self?.onCollision?(progress)
+        continuousCollisionCalculator.calculateCollisionsIfNeeded(timestamp: displaylink.timestamp, onCollision: { [weak self] progress, rotation in
+            self?.onCollision?(progress, rotation)
         })
         
         let layerRotationZ = animationObjectLayer?.presentation()?.value(forKeyPath: "transform.rotation.z") as? Double
         
-        collisionCalculator.calculateCollisionsIfNeeded(layerRotationZ: layerRotationZ, onCollision: { [weak self] progress in
-            self?.onCollision?(progress)
+        collisionCalculator.calculateCollisionsIfNeeded(layerRotationZ: layerRotationZ, onCollision: { [weak self] progress, rotation in
+            self?.onCollision?(progress, rotation)
         })
     }
     #endif
